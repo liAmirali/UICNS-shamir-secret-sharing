@@ -1,4 +1,4 @@
-class reconstruct_shamir_secret:
+class ReconstructShamirSecret:
     def __init__(self, t, n, p, shares):
         self.t = t
         self.n = n
