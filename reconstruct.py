@@ -25,5 +25,22 @@ class ReconstructShamirSecret:
         return self._lagrange_interpolation(0, x, y)
 
 
-reconstruct = ReconstructShamirSecret(3, 5, 13, [(2, 8), (3, 1), (4, 9), (5, 6)])
-print(reconstruct.reveal_secret())
+def main():
+    print("Welcome to Shamir's Secret Reconstruction")
+    threshold = int(input("Enter the threshold number of shares needed to reconstruct the secret: "))
+    num_shares = int(input("Enter the total number of shares: "))
+    prime_mod = int(input("Enter the prime number for modulo operations: "))
+    
+    shares = []
+    print(f"\nEnter the {threshold} shares (in the format x y):")
+    for _ in range(threshold):
+        x, y = map(int, input().split())
+        shares.append((x, y))
+    
+    reconstruct = ReconstructShamirSecret(threshold, num_shares, prime_mod, shares)
+    secret = reconstruct.reveal_secret()
+    print(f"\nThe reconstructed secret is: {secret}")
+
+
+if __name__ == "__main__":
+    main()
