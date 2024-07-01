@@ -18,13 +18,13 @@ This project implements Shamir's Secret Sharing scheme in Python. It includes tw
 1. Clone the repository:
 
     ```bash
-    git clone https://github.com/yourusername/shamir-secret-sharing.git
+    git clone https://github.com/liamirali/UICNS-shamir-secret-sharing.git
     ```
 
 2. Navigate to the project directory:
 
     ```bash
-    cd shamir-secret-sharing
+    cd UICNS-shamir-secret-sharing
     ```
 
 ### Usage
