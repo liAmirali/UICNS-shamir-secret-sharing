@@ -48,5 +48,6 @@ def main():
     for share in shares:
         print(f"Share {share[0]}: {share[1]}")
 
+
 if __name__ == "__main__":
     main()
