@@ -8,7 +8,7 @@ class ShamirSecret:
         self.s = s % p  # The secret
         self.n = n      # The number of shares
         self.t = t      # The number of participants needed to reconstruct the secret
-        self.p = p      # The mode of numbers
+        self.p = p      # The modulo of numbers
 
         # Generate the coefficients of the polynomial
         for _ in range(t - 1):
