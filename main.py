@@ -11,8 +11,7 @@ class ShamirSecret:
         self.p = p      # The modulo of numbers
 
         # Generate the coefficients of the polynomial
-        for _ in range(t - 1):
-            self._coef.append(random.randint(1, p))
+        self._coef = [random.randint(1, p) for _ in range(t - 1)]
 
     def _print_polynomial(self):
         print(f"f(x) = {self.s}", end="")
@@ -33,7 +32,21 @@ class ShamirSecret:
         return shares
 
 
-shamir_secret = ShamirSecret(1005, 10, 6, 100)
-shamir_secret._print_polynomial()
-shares = shamir_secret.generate_shares()
-print(shares)
+def main():
+    print("Welcome to Shamir's Secret Sharing Scheme")
+    secret = int(input("Enter the secret number: "))
+    num_shares = int(input("Enter the number of shares: "))
+    threshold = int(input("Enter the threshold number of shares needed to reconstruct the secret: "))
+    prime_mod = int(input("Enter a prime number for modulo operations: "))
+
+    shamir_secret = ShamirSecret(secret, num_shares, threshold, prime_mod)
+    print("\nGenerated Polynomial:")
+    shamir_secret._print_polynomial()
+    
+    shares = shamir_secret.generate_shares()
+    print("\nGenerated Shares:")
+    for share in shares:
+        print(f"Share {share[0]}: {share[1]}")
+
+if __name__ == "__main__":
+    main()

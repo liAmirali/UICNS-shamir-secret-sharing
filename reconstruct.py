@@ -18,7 +18,12 @@ class ReconstructShamirSecret:
             result = (result + term) % self.p
 
         return result
+    
+    def reveal_secret(self):
+        x = [x for x, y in self.shares]
+        y = [y for x, y in self.shares]
+        return self._lagrange_interpolation(0, x, y)
 
 
-reconstruct = ReconstructShamirSecret(3, 5, 13, [(1, 4), (2, 8), (5, 6)])
-print(reconstruct._lagrange_interpolation(0, [1, 2, 5], [4, 8, 6]))
+reconstruct = ReconstructShamirSecret(3, 5, 13, [(2, 8), (3, 1), (4, 9), (5, 6)])
+print(reconstruct.reveal_secret())
