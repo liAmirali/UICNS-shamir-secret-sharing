@@ -3,10 +3,10 @@ from tkinter import messagebox
 
 class ReconstructShamirSecret:
     def __init__(self, t, n, p, shares):
-        self.t = t
-        self.n = n
-        self.p = p
-        self.shares = shares
+        self.t = t  # Threshold (minimum shares required to reconstruct the secret)
+        self.n = n  # Total number of shares provided
+        self.p = p  # Prime number used for modulo operations
+        self.shares = shares  # List of (x, y) shares provided
 
     def _lagrange_interpolation(self, input, x, y):
         result = 0
@@ -20,53 +20,69 @@ class ReconstructShamirSecret:
             term *= y[i]
             result = (result + term) % self.p
         return result
-    
+
     def reveal_secret(self):
         x = [x for x, y in self.shares]
         y = [y for x, y in self.shares]
         return self._lagrange_interpolation(0, x, y)
 
-def reconstruct_secret():
-    try:
-        threshold = int(entry_threshold.get())
-        prime_mod = int(entry_prime.get())
+class ReconstructSecretApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Shamir's Secret Sharing - Reconstruct Secret")
+        self.create_widgets()  # Create GUI widgets
 
-        shares_input = text_shares.get(1.0, tk.END).strip().split("\n")
-        shares = [(int(x.split()[0]), int(x.split()[1])) for x in shares_input if x]
+    def create_widgets(self):
+        # Labels and Entry fields
+        tk.Label(self.root, text="Threshold:").grid(row=0, column=0)
+        self.entry_threshold = tk.Entry(self.root)
+        self.entry_threshold.grid(row=0, column=1)
 
-        if len(shares) < threshold:
-            messagebox.showerror("Invalid input", "Not enough shares provided")
-            return
+        tk.Label(self.root, text="Prime Number:").grid(row=1, column=0)
+        self.entry_prime = tk.Entry(self.root)
+        self.entry_prime.grid(row=1, column=1)
 
-        reconstruct = ReconstructShamirSecret(threshold, len(shares), prime_mod, shares)
-        secret = reconstruct.reveal_secret()
+        # Text area for entering shares (x, y)
+        tk.Label(self.root, text="Shares (x y):").grid(row=2, column=0, columnspan=2)
+        self.text_shares = tk.Text(self.root, height=10, width=50)
+        self.text_shares.grid(row=3, column=0, columnspan=2)
 
-        text_result.delete(1.0, tk.END)
-        text_result.insert(tk.END, f"Reconstructed Secret: {secret}\n")
-    except ValueError:
-        messagebox.showerror("Invalid input", "Please enter valid numbers")
-    except Exception as e:
-        messagebox.showerror("Error", str(e))
+        # Button to reconstruct secret
+        self.btn_reconstruct = tk.Button(self.root, text="Reconstruct Secret", command=self.reconstruct_secret)
+        self.btn_reconstruct.grid(row=4, column=0, columnspan=2)
 
-app = tk.Tk()
-app.title("Shamir's Secret Sharing - Reconstruct Secret")
+        # Text area to display reconstructed secret
+        self.text_result = tk.Text(self.root, height=5, width=50)
+        self.text_result.grid(row=5, column=0, columnspan=2)
 
-tk.Label(app, text="Threshold:").grid(row=0, column=0)
-entry_threshold = tk.Entry(app)
-entry_threshold.grid(row=0, column=1)
+    def reconstruct_secret(self):
+        try:
+            # Get input values from entry fields
+            threshold = int(self.entry_threshold.get())
+            prime_mod = int(self.entry_prime.get())
 
-tk.Label(app, text="Prime Number:").grid(row=1, column=0)
-entry_prime = tk.Entry(app)
-entry_prime.grid(row=1, column=1)
+            # Read shares input from text area
+            shares_input = self.text_shares.get(1.0, tk.END).strip().split("\n")
+            shares = [(int(x.split()[0]), int(x.split()[1])) for x in shares_input if x]
 
-tk.Label(app, text="Shares (x y):").grid(row=2, column=0, columnspan=2)
-text_shares = tk.Text(app, height=10, width=50)
-text_shares.grid(row=3, column=0, columnspan=2)
+            # Validate if enough shares are provided
+            if len(shares) < threshold:
+                messagebox.showerror("Invalid input", "Not enough shares provided")
+                return
 
-btn_reconstruct = tk.Button(app, text="Reconstruct Secret", command=reconstruct_secret)
-btn_reconstruct.grid(row=4, column=0, columnspan=2)
+            # Create ReconstructShamirSecret object with input parameters
+            reconstruct = ReconstructShamirSecret(threshold, len(shares), prime_mod, shares)
+            secret = reconstruct.reveal_secret()  # Reveal the reconstructed secret
 
-text_result = tk.Text(app, height=5, width=50)
-text_result.grid(row=5, column=0, columnspan=2)
+            # Clear previous result and display reconstructed secret in text area
+            self.text_result.delete(1.0, tk.END)
+            self.text_result.insert(tk.END, f"Reconstructed Secret: {secret}\n")
+        except ValueError:
+            messagebox.showerror("Invalid input", "Please enter valid numbers")
+        except Exception as e:
+            messagebox.showerror("Error", str(e))
 
-app.mainloop()
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = ReconstructSecretApp(root)
+    root.mainloop()
